@@ -27,7 +27,7 @@ custom:
 Then add the following code to when you want access to the custom variables:
 
 ```
-const SharedVars = require('serverless-shared-vars/Config').Get();
+const SharedVars = require('serverless-shared-vars').get();
 ```
 
 You can now access the same variables in both your `serverless.yml`:

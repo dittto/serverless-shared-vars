@@ -43,6 +43,16 @@ class SharedVars {
             logger.log('Removing Shared vars after zip created');
         });
     }
+
+    static get() {
+        try {
+            if (require.resolve('.shared-vars')) {
+                return require('.shared-vars');
+            }
+        } catch (e) {
+            return [];
+        }
+    }
 }
 
 module.exports = SharedVars;
