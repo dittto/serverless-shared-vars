@@ -1,12 +1,18 @@
 {
   "name": "serverless-shared-vars",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A Serverless 1.0 plugin for sharing variables between the `serverless.yml` config and your codebase.",
   "main": "index.js",
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dittto/serverless-shared-vars.git"
+  },
+  "devDependencies": {
+    "chai": "^3.5",
+    "coveralls": "^2.11.14",
+    "istanbul": "^0.4.5",
+    "mocha": "^2.4",
+    "mocha-lcov-reporter": "^1.2.0"
   },
   "keywords": [
     "serverless",
@@ -14,5 +20,13 @@
     "vars"
   ],
   "author": "Nick Stacey @ditt_to",
-  "license": "ISC"
+  "license": "ISC",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha",
+    "cover": "istanbul cover ./node_modules/mocha/bin/_mocha",
+    "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
+  }
 }

@@ -1,42 +1,46 @@
 'use strict';
 
-const FS = require('fs');
-
 class SharedVars {
     constructor(serverless, options) {
         this.serverless = serverless;
 
+        const FS = require('fs');
         const logger = this.serverless.cli;
         const configPath = this.serverless.config.servicePath + '/';
-        const configFile = '.shared-vars.js';
         const varContainer = this.serverless.service.custom;
+        const sharedVars = varContainer && varContainer.shared ? varContainer.shared : [];
 
         this.hooks = {
-            'before:deploy:function:deploy': this.writeConfigFile.bind(null, logger, configPath, configFile, varContainer),
-            'before:deploy:createDeploymentArtifacts': this.writeConfigFile.bind(null, logger, configPath, configFile, varContainer),
-            'after:deploy:function:deploy': this.deleteConfigFile.bind(null, logger, configPath, configFile),
-            'after:deploy:createDeploymentArtifacts': this.deleteConfigFile.bind(null, logger, configPath, configFile)
+            'before:deploy:function:deploy': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
+            'before:deploy:createDeploymentArtifacts': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
+            'after:deploy:function:deploy': this.deleteConfigFile.bind(null, FS, logger, configPath),
+            'after:deploy:createDeploymentArtifacts': this.deleteConfigFile.bind(null, FS, logger, configPath)
         };
     }
 
-    writeConfigFile(logger, filePath, fileName, varContainer) {
+    static get configFile() {
+        return '.shared-vars.js';
+    }
 
+    writeConfigFile(FS, logger, filePath, sharedVars) {
         // create the template
-        const vars = varContainer && varContainer.shared ? varContainer.shared : [];
         const template = '"use strict";' + "\n\n" +
-            'module.exports = JSON.parse(\'' + JSON.stringify(vars) + '\');';
+            'module.exports = JSON.parse(\'' + JSON.stringify(sharedVars) + '\');';
 
         // save the file
-        FS.writeFile(filePath + fileName, template, error => {
-            if (error) {
-                throw error;
-            }
-            logger.log('Writing Shared vars file to ' + fileName);
+        return new Promise((resolve, reject) => {
+            FS.writeFile(filePath + SharedVars.configFile, template, error => {
+                if (error) {
+                    reject(error);
+                }
+                logger.log('Writing Shared vars file to ' + SharedVars.configFile);
+                resolve();
+            });
         });
     }
 
-    deleteConfigFile(logger, filePath, fileName) {
-        FS.unlink(filePath + fileName, error => {
+    deleteConfigFile(FS, logger, filePath) {
+        FS.unlink(filePath + SharedVars.configFile, error => {
             if (error) {
                 throw error;
             }
@@ -46,9 +50,8 @@ class SharedVars {
 
     static get() {
         try {
-            if (require.resolve('.shared-vars')) {
-                return require('.shared-vars');
-            }
+            require.resolve('./' + SharedVars.configFile);
+            return require('./' + SharedVars.configFile);
         } catch (e) {
             return [];
         }

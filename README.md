@@ -44,10 +44,3 @@ And in your code:
 ```
 console.log(SharedVars.stage);
 ```
-
-## TODO
-
-- Add tests
-- Add linting
-- Setup Travis
-- Publish to NPM

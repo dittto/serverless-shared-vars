@@ -1,1 +1,4 @@
 .idea
+coverage
+node_modules
+.shared-vars.js
