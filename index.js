@@ -49,11 +49,13 @@ class SharedVars {
 
     static get() {
         try {
-            require.resolve(SharedVars.configFile);
             return require(SharedVars.configFile);
-        } catch (e) {
-            return [];
-        }
+        } catch (e) {}
+        try {
+            return require('./' + SharedVars.configFile);
+        } catch (e) {}
+
+        return [];
     }
 }
 
