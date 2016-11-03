@@ -3,7 +3,6 @@
 class SharedVars {
     constructor(serverless, options) {
         this.serverless = serverless;
-
         const FS = require('fs');
         const logger = this.serverless.cli;
         const configPath = this.serverless.config.servicePath + '/';
@@ -50,8 +49,8 @@ class SharedVars {
 
     static get() {
         try {
-            require.resolve('./' + SharedVars.configFile);
-            return require('./' + SharedVars.configFile);
+            require.resolve(SharedVars.configFile);
+            return require(SharedVars.configFile);
         } catch (e) {
             return [];
         }
