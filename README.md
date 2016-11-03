@@ -2,6 +2,7 @@
 
 This is a Serverless 1.0 plugin for sharing variables between the `serverless.yml` config and your codebase.
 
+[![Build Status](https://travis-ci.org/dittto/serverless-shared-vars.svg?branch=master)](https://travis-ci.org/dittto/serverless-shared-vars) [![Coverage Status](https://coveralls.io/repos/github/dittto/serverless-shared-vars/badge.svg)](https://coveralls.io/github/dittto/serverless-shared-vars) [![npm](https://badge.fury.io/js/serverless-shared-vars.svg)](https://www.npmjs.com/package/serverless-shared-vars)
 
 ## How to use
 
