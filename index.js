@@ -5,15 +5,15 @@ class SharedVars {
         this.serverless = serverless;
         const FS = require('fs');
         const logger = this.serverless.cli;
-        const configPath = this.serverless.config.servicePath + '/';
+        const configPath = this.serverless.config.servicePath + '/node_modules/';
         const varContainer = this.serverless.service.custom;
         const sharedVars = varContainer && varContainer.shared ? varContainer.shared : [];
 
         this.hooks = {
-            'before:deploy:function:deploy': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
-            'before:deploy:createDeploymentArtifacts': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
-            'after:deploy:function:deploy': this.deleteConfigFile.bind(null, FS, logger, configPath),
-            'after:deploy:createDeploymentArtifacts': this.deleteConfigFile.bind(null, FS, logger, configPath)
+            'before:invoke:local:invoke': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
+            'before:deploy:resources': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
+            'after:invoke:local:invoke': this.deleteConfigFile.bind(null, FS, logger, configPath),
+            'after:deploy:resources': this.deleteConfigFile.bind(null, FS, logger, configPath)
         };
     }
 

@@ -58,10 +58,10 @@ describe('serverless-shared-vars', function () {
     });
 
     it('has before and after hooks', function () {
-        expect(this.shared.hooks).to.have.property('before:deploy:function:deploy');
-        expect(this.shared.hooks).to.have.property('after:deploy:function:deploy');
-        expect(this.shared.hooks).to.have.property('before:deploy:createDeploymentArtifacts');
-        expect(this.shared.hooks).to.have.property('after:deploy:createDeploymentArtifacts');
+        expect(this.shared.hooks).to.have.property('before:invoke:local:invoke');
+        expect(this.shared.hooks).to.have.property('before:deploy:resources');
+        expect(this.shared.hooks).to.have.property('after:invoke:local:invoke');
+        expect(this.shared.hooks).to.have.property('after:deploy:resources');
     });
 
     it('sends shared vars through the hooks', function () {
@@ -74,8 +74,8 @@ describe('serverless-shared-vars', function () {
         };
         const shared = new HooksTest(config, []);
 
-        expect(config.service.custom.shared).to.equal(shared.hooks['before:deploy:function:deploy']());
-        expect(config.service.custom.shared).to.equal(shared.hooks['before:deploy:createDeploymentArtifacts']());
+        expect(config.service.custom.shared).to.equal(shared.hooks['before:invoke:local:invoke']());
+        expect(config.service.custom.shared).to.equal(shared.hooks['before:deploy:resources']());
     });
 
     it('writes a file based on shared values being set', function (done) {
@@ -101,7 +101,7 @@ describe('serverless-shared-vars', function () {
         );
     });
 
-    it('writes a file based on shared values not being set', function () {
+    it('writes a file based on shared values not being set', function (done) {
         // remove any existing test
         this.shared.writeConfigFile(this.FS, this.logger, '', []).then(
             value => {
@@ -119,13 +119,13 @@ describe('serverless-shared-vars', function () {
         );
     });
 
-    it('fails to write a file due to an error', function () {
+    it('fails to write a file due to an error', function (done) {
         this.FS.writeFileErrorResponse = {errors: 'errors'};
         this.shared.writeConfigFile(this.FS, this.logger, '', []).then(
             value => {},
             errors => {
                 expect(this.FS.writeFileErrorResponse).to.equal(errors);
-                done(errors);
+                done();
             }
         );
     });
@@ -142,7 +142,7 @@ describe('serverless-shared-vars', function () {
             () => {
                 this.shared.deleteConfigFile(this.FS, this.logger, '');
             }
-            ).to.throw(errorMessage);
+        ).to.throw(errorMessage);
     });
 
     it('retrieves a config file when it exists', function (done) {
