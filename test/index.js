@@ -59,9 +59,9 @@ describe('serverless-shared-vars', function () {
 
     it('has before and after hooks', function () {
         expect(this.shared.hooks).to.have.property('before:invoke:local:invoke');
-        expect(this.shared.hooks).to.have.property('before:deploy:resources');
         expect(this.shared.hooks).to.have.property('after:invoke:local:invoke');
-        expect(this.shared.hooks).to.have.property('after:deploy:resources');
+        expect(this.shared.hooks).to.have.property('before:package:createDeploymentArtifacts');
+        expect(this.shared.hooks).to.have.property('after:package:createDeploymentArtifacts');
     });
 
     it('sends shared vars through the hooks', function () {
@@ -75,7 +75,7 @@ describe('serverless-shared-vars', function () {
         const shared = new HooksTest(config, []);
 
         expect(config.service.custom.shared).to.equal(shared.hooks['before:invoke:local:invoke']());
-        expect(config.service.custom.shared).to.equal(shared.hooks['before:deploy:resources']());
+        expect(config.service.custom.shared).to.equal(shared.hooks['before:package:createDeploymentArtifacts']());
     });
 
     it('writes a file based on shared values being set', function (done) {

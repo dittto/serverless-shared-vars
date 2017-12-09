@@ -11,9 +11,9 @@ class SharedVars {
 
         this.hooks = {
             'before:invoke:local:invoke': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
-            'before:deploy:resources': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
+            'before:package:createDeploymentArtifacts': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
             'after:invoke:local:invoke': this.deleteConfigFile.bind(null, FS, logger, configPath),
-            'after:deploy:resources': this.deleteConfigFile.bind(null, FS, logger, configPath)
+            'after:package:createDeploymentArtifacts': this.deleteConfigFile.bind(null, FS, logger, configPath)
         };
     }
 
