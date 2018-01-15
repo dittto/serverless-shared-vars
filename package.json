@@ -1,6 +1,6 @@
 {
   "name": "serverless-shared-vars",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A Serverless 1.0 plugin for sharing variables between the `serverless.yml` config and your codebase.",
   "main": "index.js",
   "repository": {

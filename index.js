@@ -9,10 +9,15 @@ class SharedVars {
         const varContainer = this.serverless.service.custom;
         const sharedVars = varContainer && varContainer.shared ? varContainer.shared : [];
 
+        // https://serverless.com/framework/docs/providers/google/guide/plugins/#hooks for general docs
+        // https://gist.github.com/HyperBrain/50d38027a8f57778d5b0f135d80ea406 for list of hooks. All hooks can have before: and after:
         this.hooks = {
             'before:invoke:local:invoke': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
+            'before:deploy:function:deploy': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
             'before:package:createDeploymentArtifacts': this.writeConfigFile.bind(null, FS, logger, configPath, sharedVars),
+
             'after:invoke:local:invoke': this.deleteConfigFile.bind(null, FS, logger, configPath),
+            'after:deploy:function:deploy': this.deleteConfigFile.bind(null, FS, logger, configPath),
             'after:package:createDeploymentArtifacts': this.deleteConfigFile.bind(null, FS, logger, configPath)
         };
     }
@@ -53,6 +58,12 @@ class SharedVars {
         } catch (e) {}
         try {
             return require('./' + SharedVars.configFile);
+        } catch (e) {}
+        try {
+            return require('../' + SharedVars.configFile);
+        } catch (e) {}
+        try {
+            return require('../../' + SharedVars.configFile);
         } catch (e) {}
 
         return [];
